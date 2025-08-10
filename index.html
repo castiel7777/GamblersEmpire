@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamblers Empire - Main Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style/style.css">
+
+</head>
+
+<body>
+
+    <div class="main-container">
+        <i id="menu-toggle" class="fas fa-bars" style="position: fixed; top: 1.5rem; left: 1.5rem; z-index: 1001;"></i>
+
+        <aside id="left-sidebar" class="left-sidebar">
+            <header class="sidebar-header" data-key="sidebar_header">
+                GAMBLERS EMPIRE
+            </header>
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link"><i class="fa-solid fa-star"></i> <span data-key="high_stakes">HIGH
+                        STAKES</span></a>
+                <a href="#" class="sidebar-link"><i class="fa-solid fa-arrow-down-9-1"></i> <span
+                        data-key="low_stakes">LOW STAKES</span></a>
+                <a href="#" class="sidebar-link"><i class="fa-solid fa-chess-knight"></i><span
+                        data-key="edrp_championship">EDRP CHAPIONSHIP</span></a>
+                <a href="/custom_tables.html" class="sidebar-link"><i class="fa-solid fa-feather"></i><span
+                        data-key="custom_tables">CUSTOM TABLES</span></a>
+                <h2 class="side-main-subtitle">---------------------------------</h2>
+                <a href="#" class="sidebar-link"><i class="fa-solid fa-users"></i> <span
+                        data-key="blackjack">BLACKJACK</span></a>
+                <a href="#" class="sidebar-link"><i class="fa-solid fa-face-grin-tongue-wink"></i> <span
+                        data-key="poker">POKER</span></a>
+                <a href="#" class="sidebar-link"><i class="fa-solid fa-book-skull"></i> <span
+                        data-key="joker">JOKER</span></a>
+                <a href="#" class="sidebar-link"><i class="fa-solid fa-scroll"></i> <span
+                        data-key="bura">BURA</span></a>
+            </nav>
+        </aside>
+
+        <div class="content-area">
+            <nav class="content-top-nav">
+                <div class="content-nav-links">
+                    <a href="#" class="active" data-key="content_nav_empire">GAMBLERS EMPIRE</a>
+                </div>
+                <div class="content-actions">
+                    <div class="icon-with-tooltip" data-tooltip="SHARE">
+                        <i class="fa-solid fa-share"></i>
+                    </div>
+                    <div id="share-panel">
+                        <p class="share-text">Share this website to discover more awesome features!</p>
+                        <input type="text" class="share-link" value="https://yourwebsite.com" readonly>
+                        <button class="copy-button">Copy</button>
+                    </div>
+                    <a href="/signup.html" class="icon-with-tooltip" data-tooltip="SIGN IN">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </a>
+                    <button id="lang-toggle-button" class="lang-toggle-button">ENG</button>
+                </div>
+            </nav>
+
+            <main class="flex flex-grow">
+                <div class="center-content flex-grow">
+                    <img src="/images/Untitled-removebg-preview.png" alt="Empire Logo" class="main-logo">
+                    <h1 class="main-title" data-key="main_title">GAMBLERS</h1>
+                    <h2 class="main-subtitle" data-key="main_subtitle">- EMPIRE -</h2>
+                    <div class="main-cta-button" data-key="cta_button">
+                        ENTER THE REALM
+                    </div>
+                </div>
+
+                <aside class="right-panel">
+                    <div class="panel-header">
+                        <h3 data-key="user_stories">USER SETTINGS</h3>
+                        <div class="panel-search">
+                            <i class="fa-solid fa-search"></i>
+                        </div>
+                    </div>
+                    <div class="panel-list">
+                        <div class="panel-list-item"><span>PROFILE SETTINGS</span> <i
+                                class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="panel-list-item"><span>SECURITY</span> <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="panel-list-item"><span>Terms of Use</span> <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <div class="ad-placement">
+                        <h4 data-key="ad_header">ADVERTISEMENT</h4>
+                        <img src="/images/Your_Ad.jpg" alt="Advertisement"
+                            style="max-width: 200px; height: auto; display: block; margin: 5px auto;">
+                        <p class="ad-placeholder" data-key="ad_placeholder">Your ad content goes here. <br> Promote your
+                            product or service!</p>
+                    </div>
+                </aside>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.getElementById('menu-toggle');
+            const leftSidebar = document.getElementById('left-sidebar');
+            const langToggleButton = document.getElementById('lang-toggle-button');
+            const body = document.body; // Get the body element
+
+            // --- Mobile Menu Toggle Logic ---
+            if (menuToggle && leftSidebar) {
+                menuToggle.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    leftSidebar.classList.toggle('active');
+                });
+            }
+
+            document.addEventListener('click', (event) => {
+                if (leftSidebar.classList.contains('active') && !leftSidebar.contains(event.target) &&
+                    event.target !== menuToggle) {
+                    leftSidebar.classList.remove('active');
+                }
+            });
+
+            // --- Language Translation Logic ---
+            const translations = {
+                'en': {
+                    'sidebar_header': 'GAMBLERS EMPIRE',
+                    'high_stakes': 'HIGH STAKES',
+                    'low_stakes': 'LOW STAKES',
+                    'edrp_championship': 'EDRP TOURNAMENTS',
+                    'custom_tables': 'CUSTOM TABLES',
+                    'blackjack': 'BLACKJACK',
+                    'poker': 'POKER',
+                    'joker': 'JOKER',
+                    'bura': 'BURA',
+                    'content_nav_empire': 'GAMBLERS EMPIRE',
+                    'main_title': 'GAMBLERS',
+                    'main_subtitle': '- EMPIRE -',
+                    'cta_button': 'ENTER THE REALM',
+                    'user_stories': 'USER SETTINGS',
+                    'ad_header': 'ADVERTISEMENT',
+                    'ad_placeholder': 'Your ad content goes here. <br> Promote your product or service!'
+                },
+                'ka': { // Georgian (Kartuli)
+                    'high_stakes': 'მაღალი ფსონები',
+                    'low_stakes': 'დაბალი ფსონები',
+                    'edrp_championship': 'EDRP ტურნირები',
+                    'custom_tables': 'მორგებული მაგიდები',
+                    'blackjack': 'ბლექჯეკი',
+                    'poker': 'პოკერი',
+                    'joker': 'ჯოკერი',
+                    'bura': 'ბურა',
+                    'cta_button': 'შედით სამფლობელოში',
+                    'user_stories': 'პარამეტრები',
+                    'ad_header': 'რეკლამა',
+                    'ad_placeholder': 'თქვენი რეკლამის შინაარსი აქ განთავსდება. გაარეკლამეთ თქვენი პროდუქტი ან მომსახურება!'
+                }
+            };
+
+            let currentLanguage = localStorage.getItem('language') || 'en'; // Default to English
+
+            function updateContent() {
+                const elements = document.querySelectorAll('[data-key]');
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-key');
+                    const translation = translations[currentLanguage][key];
+                    if (translation) {
+                        // Use innerHTML for placeholders that might contain <br> tags
+                        if (key === 'ad_placeholder') {
+                            element.innerHTML = translation;
+                        } else {
+                            element.textContent = translation;
+                        }
+                    }
+                });
+                // Update the button text to show the current language
+                langToggleButton.textContent = currentLanguage.toUpperCase();
+            }
+
+            function toggleLanguage() {
+                currentLanguage = (currentLanguage === 'en') ? 'ka' : 'en';
+                localStorage.setItem('language', currentLanguage);
+                updateContent();
+            }
+
+            // Initial content load based on saved language or default
+            updateContent();
+
+            // Event listener for the language toggle button
+            if (langToggleButton) {
+                langToggleButton.addEventListener('click', toggleLanguage);
+            }
+        });
+
+
+
+        //share panel// 
+
+        const shareButton = document.querySelector('.icon-with-tooltip[data-tooltip="SHARE"]');
+        const sharePanel = document.getElementById('share-panel');
+
+        shareButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sharePanel.style.display = (sharePanel.style.display === 'block') ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!sharePanel.contains(e.target) && !shareButton.contains(e.target)) {
+                sharePanel.style.display = 'none';
+            }
+        });
+
+
+        // copy ღილაკი //
+
+        const copyBtn = document.querySelector('.copy-button');
+        const shareInput = document.querySelector('.share-link');
+
+        copyBtn.addEventListener('click', () => {
+            shareInput.select();
+            shareInput.setSelectionRange(0, 99999); // For mobile
+            document.execCommand('copy');
+
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => {
+                copyBtn.textContent = 'Copy';
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker Table - <span id="table-view-name"></span></title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter and Roboto Condensed -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Define color palette and base styles (replicated for standalone page) */
+        :root {
+            --color-background: #0D1117;
+            --color-panel: #161B22;
+            --color-gold: #D1B67D;
+            --color-gold-transparent: rgba(209, 182, 125, 0);
+            --color-border: rgba(209, 182, 125, 0.2);
+            --color-text-primary: #E0E0E0;
+            --color-text-secondary: #8B949E;
+            --color-felt-green: #0F4D3D;
+            /* Darker green felt */
+            --color-dealer-orange: #FF8C00;
+            /* Orange for dealer button */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
+            overflow: hidden;
+            /* Hide scrollbars for the table view */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            perspective: 1000px;
+            /* For 3D tilt effect */
+        }
+
+        .poker-table-view-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--color-background);
+            overflow: hidden;
+            position: relative;
+            /* Needed for absolute positioning of top buttons */
+        }
+
+        .poker-table-outer {
+            width: 90vw;
+            height: 65vw;
+            max-width: 1000px;
+            max-height: 700px;
+            background-color: #2a2a2a;
+            /* Darker outer border color */
+            border-radius: 50% / 30%;
+            /* Oval shape */
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 5px solid #1a1a1a;
+            /* Even darker edge */
+            transform: rotateX(15deg);
+            /* Slight 3D tilt */
+        }
+
+        .poker-table-felt {
+            width: 95%;
+            /* Inner felt relative to outer table */
+            height: 90%;
+            background-color: var(--color-felt-green);
+            border-radius: 50% / 30%;
+            /* Oval shape */
+            position: relative;
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+            border: 3px solid var(--color-gold);
+            /* Gold border */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .poker-table-logo {
+            font-family: 'Inter', sans-serif;
+            /* Or a custom font for the logo */
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-gold);
+            text-align: center;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .poker-table-logo span {
+            font-size: 0.8em;
+            /* For 'GE' */
+            position: relative;
+        }
+
+        .poker-table-logo span::before {
+            content: '♠';
+            /* Spade icon */
+            position: absolute;
+            top: -0.2em;
+            left: -0.7em;
+            font-size: 0.4em;
+            color: var(--color-gold);
+        }
+
+        .poker-table-logo-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .poker-table-center-pot {
+            width: 120px;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 30px;
+            /* Oval pot */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        .player-seat-container {
+            position: absolute;
+            width: 140px;
+            /* Wider seat for name and chips */
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 0.9rem;
+            border: 2px solid var(--color-gold);
+            padding: 0.5rem;
+            box-sizing: border-box;
+            cursor: pointer;
+            /* Indicates it's clickable */
+            transition: all 0.2s ease;
+            z-index: 3;
+            /* Above felt, below modals */
+        }
+
+        .player-seat-container:hover {
+            transform: scale(0.5);
+            box-shadow: 0 0 15px var(--color-gold);
+        }
+
+        .player-seat-container .seat-button {
+            background-color: #28a745;
+            /* Green color for seat button */
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            /* Circular button */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+
+        .player-seat-container .seat-button:hover {
+            background-color: #218838;
+            /* Darker green on hover */
+        }
+
+        .player-seat-container .player-name {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .player-seat-container .player-chips {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+        }
+
+        .seat-top-center {
+            top: 5%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .seat-top-right {
+            top: 20%;
+            right: 8%;
+            transform: translate(50%, -50%);
+        }
+
+        .seat-right {
+            top: 50%;
+            right: 2%;
+            transform: translate(50%, -50%);
+        }
+
+        .seat-bottom-right {
+            bottom: 20%;
+            right: 8%;
+            transform: translate(50%, 50%);
+        }
+
+        .seat-bottom-center {
+            bottom: 5%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+        }
+
+        .seat-bottom-left {
+            bottom: 20%;
+            left: 8%;
+            transform: translate(-50%, 50%);
+        }
+
+        .seat-left {
+            top: 50%;
+            left: 2%;
+            transform: translate(-50%, -50%);
+        }
+
+        .seat-top-left {
+            top: 20%;
+            left: 8%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Center seat for 9th player - adjust if needed */
+
+
+        /* Dealer Button (removed from HTML, but keeping style for reference if needed later) */
+        .dealer-button {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: var(--color-dealer-orange);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 4;
+            /* Above seats */
+            /* Initial position - will be moved by game logic */
+            top: calc(50% - 20px);
+            /* Adjust based on table size */
+            left: calc(50% - 20px);
+            /* Adjust based on table size */
+        }
+
+        /* Card Placeholders */
+        .card-placeholder-container {
+            position: absolute;
+            bottom: 25%;
+            /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 2;
+        }
+
+        .card-placeholder {
+            width: 60px;
+            height: 90px;
+            background-color: rgba(255, 255, 255, 0.1);
+            /* Faded white */
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Hole cards specific positioning */
+        .hole-cards {
+            position: absolute;
+            bottom: 10%;
+            /* Adjust as needed */
+            left: 20%;
+            /* Relative to felt */
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.2rem;
+            z-index: 2;
+        }
+
+        /* Top-left functional buttons */
+        .top-left-buttons {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 5;
+            /* Ensure they are on top */
+        }
+
+        .top-left-button {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: var(--color-text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border: 1px solid var(--color-border);
+        }
+
+        .top-left-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Table ID at bottom-left */
+        .table-id-display {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            color: var(--color-text-secondary);
+            font-size: 0.8rem;
+            z-index: 1;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            /* Hidden by default, JavaScript will change to 'flex' */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            /* Darker overlay for game table */
+            z-index: 10000;
+            /* Higher than other elements */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Modal Content Box */
+        .modal-content {
+            background-color: var(--color-panel);
+            color: var(--color-text-primary);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.9);
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 0.3s ease-out;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--color-gold);
+        }
+
+        .modal-form .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .modal-form label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+
+        .modal-form .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .modal-form .form-input:focus {
+            border-color: var(--color-gold);
+        }
+
+        .modal-form .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-form input[type="range"] {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+
+        .modal-form input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-gold);
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-form input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-gold);
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .seat-confirm-button,
+        .cancel-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .seat-confirm-button {
+            background-color: var(--color-gold);
+            color: var(--color-panel);
+        }
+
+        .seat-confirm-button:hover {
+            filter: brightness(0.9);
+            transform: translateY(-1px);
+        }
+
+        .cancel-button {
+            background-color: var(--color-background);
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-border);
+        }
+
+        .cancel-button:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-primary);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive adjustments for the table */
+        @media (max-width: 768px) {
+            .poker-table-outer {
+                width: 95vw;
+                height: 70vw;
+            }
+
+            .poker-table-felt {
+                width: 90%;
+                height: 85%;
+            }
+
+            .poker-table-logo {
+                font-size: 2rem;
+            }
+
+            .poker-table-logo-subtitle {
+                font-size: 0.7rem;
+            }
+
+            .poker-table-center-pot {
+                width: 80px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .player-seat-container {
+                width: 100px;
+                height: 50px;
+                font-size: 0.8rem;
+            }
+
+            .player-seat-container .seat-button {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.5rem;
+            }
+
+            .top-left-button {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="poker-table-view-container">
+        <!-- Top-left functional buttons -->
+        <div class="top-left-buttons">
+            <button class="top-left-button" title="Back to Lobby">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <button class="top-left-button" title="Toggle Layout">
+                <i class="fas fa-th-large"></i>
+            </button>
+            <button class="top-left-button" title="Hand History">
+                <i class="fas fa-history"></i>
+            </button>
+        </div>
+
+        <div class="poker-table-outer">
+            <div class="poker-table-felt">
+                <div class="poker-table-logo">
+                    <span>G</span>E
+                </div>
+                <div class="poker-table-logo-subtitle">
+                    Gamblers empire™
+                </div>
+                <div class="poker-table-center-pot">
+                    Pot: $0
+                </div>
+
+                <!-- Dealer Button (Removed) -->
+
+                <!-- Player Seats (9 seats) -->
+                <!-- Player Seats (with named positions) -->
+                <div class="player-seat-container seat-top-center" id="seat-1">
+                    <button class="seat-button" onclick="showBuyinPanel(1)">&#9660;</button>
+                </div>
+                <div class="player-seat-container seat-top-right" id="seat-2">
+                    <button class="seat-button" onclick="showBuyinPanel(2)">&#9660;</button>
+                </div>
+                <div class="player-seat-container seat-right" id="seat-3">
+                    <button class="seat-button" onclick="showBuyinPanel(3)">&#9660;</button>
+                </div>
+                <div class="player-seat-container seat-bottom-right" id="seat-4">
+                    <button class="seat-button" onclick="showBuyinPanel(4)">&#9660;</button>
+                </div>
+                <div class="player-seat-container seat-bottom-center" id="seat-5">
+                    <button class="seat-button" onclick="showBuyinPanel(5)">&#9660;</button>
+                </div>
+                <div class="player-seat-container seat-bottom-left" id="seat-6">
+                    <button class="seat-button" onclick="showBuyinPanel(6)">&#9660;</button>
+                </div>
+                <div class="player-seat-container seat-left" id="seat-7">
+                    <button class="seat-button" onclick="showBuyinPanel(7)">&#9660;</button>
+                </div>
+                <div class="player-seat-container seat-top-left " id="seat-8">
+                    <button class="seat-button" onclick="showBuyinPanel(7)">&#9660;</button>
+                </div>
+
+
+                <!-- Community Card Placeholders -->
+                <div class="card-placeholder-container">
+                    <div class="card-placeholder"></div>
+                    <div class="card-placeholder"></div>
+                    <div class="card-placeholder"></div>
+                    <div class="card-placeholder"></div>
+                    <div class="card-placeholder"></div>
+                </div>
+
+                <!-- Player Hole Card Placeholders (example for one player) -->
+
+            </div>
+        </div>
+        <div class="mt-4 text-center">
+            <h2 id="table-info-name" class="text-2xl font-bold text-gold-color"></h2>
+            <p id="table-info-details" class="text-lg text-primary-color"></p>
+        </div>
+
+        <!-- Table ID at bottom-left -->
+        <div class="table-id-display">
+            ID: <span id="table-view-id">N/A</span>
+        </div>
+    </div>
+
+    <!-- Buy-in Panel (Modal) -->
+    <div id="buyin-panel" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-title">Seat at Table</h3>
+            <form id="buyin-form" class="modal-form">
+                <div class="form-group">
+                    <label for="buyin-amount-slider">Choose your chips:</label>
+                    <div class="slider-container">
+                        <span id="min-buyin-display"></span>
+                        <input type="range" id="buyin-amount-slider" min="0" max="100" value="50">
+                        <span id="max-buyin-display"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="buyin-amount-input">Amount ($):</label>
+                    <input type="number" id="buyin-amount-input" required class="form-input">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="seat-confirm-button">Seat</button>
+                    <button type="button" class="cancel-button" onclick="hideBuyinPanel()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentSeatId = null;
+        let tableMinBuyin = 0;
+        let tableMaxBuyin = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tableId = urlParams.get('tableId');
+            const tableName = urlParams.get('tableName');
+            const minBuyin = parseFloat(urlParams.get('minBuyin'));
+            const maxBuyin = parseFloat(urlParams.get('maxBuyin'));
+
+            tableMinBuyin = minBuyin;
+            tableMaxBuyin = maxBuyin;
+
+            document.getElementById('table-view-name').textContent = tableName || 'Unknown Table';
+            document.getElementById('table-info-name').textContent = tableName || 'Unknown Table';
+            document.getElementById('table-info-details').textContent =
+                `Buy-in: $${minBuyin || 'N/A'} / $${maxBuyin || 'N/A'}`;
+            document.getElementById('table-view-id').textContent = tableId || 'N/A';
+
+
+            const buyinSlider = document.getElementById('buyin-amount-slider');
+            const buyinInput = document.getElementById('buyin-amount-input');
+            const minBuyinDisplay = document.getElementById('min-buyin-display');
+            const maxBuyinDisplay = document.getElementById('max-buyin-display');
+
+            // Set slider and input limits
+            buyinSlider.min = tableMinBuyin;
+            buyinSlider.max = tableMaxBuyin;
+            buyinInput.min = tableMinBuyin;
+            buyinInput.max = tableMaxBuyin;
+
+            // Set initial value to min buy-in
+            buyinSlider.value = tableMinBuyin;
+            buyinInput.value = tableMinBuyin;
+            minBuyinDisplay.textContent = `$${tableMinBuyin}`;
+            maxBuyinDisplay.textContent = `$${tableMaxBuyin}`;
+
+            // Sync slider and input
+            buyinSlider.addEventListener('input', () => {
+                buyinInput.value = buyinSlider.value;
+            });
+
+            buyinInput.addEventListener('input', () => {
+                let value = parseFloat(buyinInput.value);
+                if (isNaN(value)) {
+                    value = tableMinBuyin;
+                }
+                if (value < tableMinBuyin) {
+                    value = tableMinBuyin;
+                }
+                if (value > tableMaxBuyin) {
+                    value = tableMaxBuyin;
+                }
+                buyinInput.value = value;
+                buyinSlider.value = value;
+            });
+        });
+
+        function showBuyinPanel(seatNumber) {
+            currentSeatId = `seat-${seatNumber}`;
+            const buyinPanel = document.getElementById('buyin-panel');
+            buyinPanel.style.display = 'flex';
+
+            // Reset slider and input to min buy-in when panel opens
+            const buyinSlider = document.getElementById('buyin-amount-slider');
+            const buyinInput = document.getElementById('buyin-amount-input');
+            buyinSlider.value = tableMinBuyin;
+            buyinInput.value = tableMinBuyin;
+        }
+
+        function hideBuyinPanel() {
+            document.getElementById('buyin-panel').style.display = 'none';
+        }
+
+        document.getElementById('buyin-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const chipsAmount = parseFloat(document.getElementById('buyin-amount-input').value);
+
+            if (isNaN(chipsAmount) || chipsAmount < tableMinBuyin || chipsAmount > tableMaxBuyin) {
+                alert(`Please enter a valid chip amount between $${tableMinBuyin} and $${tableMaxBuyin}.`);
+                return;
+            }
+
+            const seatElement = document.getElementById(currentSeatId);
+            if (seatElement) {
+                seatElement.innerHTML = `
+                    <span class="player-name">Player ${currentSeatId.split('-')[1]}</span>
+                    <span class="player-chips">$${chipsAmount.toFixed(0)}</span>
+                `;
+                seatElement.style.cursor = 'default'; // Make it not clickable after seating
+                seatElement.onclick = null; // Remove click handler
+            }
+
+            hideBuyinPanel();
+        });
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (event) => {
+            const buyinPanel = document.getElementById('buyin-panel');
+            const modalContent = buyinPanel.querySelector('.modal-content');
+            const isClickInsideModal = modalContent.contains(event.target);
+            const isClickOnSeatButton = event.target.classList.contains('seat-button');
+
+            if (buyinPanel.style.display === 'flex' && !isClickInsideModal && !isClickOnSeatButton) {
+                hideBuyinPanel();
+            }
+        });
+    </script>
+</body>
+
+</html>

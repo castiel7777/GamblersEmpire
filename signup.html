@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamblers Empire - Sign Up</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style/style.css"> <style>
+        /* Optional: Add specific styles for signup page if needed */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--color-background); /* Ensure background is set */
+            color: var(--color-text-primary);
+        }
+        .signup-container {
+            max-width: 400px;
+            padding: 2rem;
+            background-color: var(--color-panel);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(209, 182, 125, 0.2);
+            text-align: center;
+            color: var(--color-text-primary);
+        }
+        .signup-container h2 {
+            font-size: 1.8rem;
+            color: var(--color-gold);
+            margin-bottom: 1.5rem;
+        }
+        .signup-container input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--color-border);
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
+        }
+        .signup-container button {
+            background-color: var(--color-gold);
+            color: var(--color-panel);
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .signup-container .message {
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .signup-container .back-to-login {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .signup-container .back-to-login a {
+            color: var(--color-gold);
+            text-decoration: none;
+        }
+        .signup-container .back-to-login a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h2 data-key="signup_title">Sign Up</h2>
+        <div id="messageDisplay" class="message"></div>
+
+        <form id="signupForm">
+            <input type="text" id="signupUsername" placeholder="Username" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <button type="submit" data-key="signup_button">Sign Up</button>
+        </form>
+
+        <p class="back-to-login" data-key="already_have_account">
+            Already have an account? <a href="/index.html" data-key="login_link">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupForm = document.getElementById('signupForm');
+            const messageDisplay = document.getElementById('messageDisplay');
+
+            // --- Language Translation Logic (Minimal for this page) ---
+            const translations = {
+                'en': {
+                    'signup_title': 'Sign Up',
+                    'signup_button': 'Sign Up',
+                    'already_have_account': 'Already have an account?',
+                    'login_link': 'Login here'
+                },
+                'ka': { // Georgian (Kartuli)
+                    'signup_title': 'რეგისტრაცია',
+                    'signup_button': 'რეგისტრაცია',
+                    'already_have_account': 'უკვე გაქვთ ანგარიში?',
+                    'login_link': 'შესვლა აქ'
+                }
+            };
+
+            let currentLanguage = localStorage.getItem('language') || 'en';
+
+            function showMessage(msg, type = 'info') {
+                messageDisplay.textContent = msg;
+                messageDisplay.style.color = type === 'error' ? 'red' : (type === 'success' ? 'green' : 'inherit');
+                setTimeout(() => { messageDisplay.textContent = ''; }, 3000);
+            }
+
+            function updateContent() {
+                const elements = document.querySelectorAll('[data-key]');
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-key');
+                    const translation = translations[currentLanguage][key];
+                    if (translation) {
+                        element.textContent = translation;
+                    }
+                });
+            }
+
+            // --- Signup Form Submission ---
+            if (signupForm) {
+                signupForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('signupUsername').value;
+                    const password = document.getElementById('signupPassword').value;
+
+                    try {
+                        const response = await fetch('/api/signup', { // Call your backend API
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username, password })
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            showMessage(data.message, 'success');
+                            signupForm.reset();
+                            // Optional: Redirect to login page after successful signup
+                            setTimeout(() => {
+                                window.location.href = '/index.html'; // Go back to login
+                            }, 2000);
+                        } else {
+                            showMessage(data.message, 'error');
+                        }
+                    } catch (error) {
+                        console.error('Signup fetch error:', error);
+                        showMessage('Network error during signup. Please try again.', 'error');
+                    }
+                });
+            }
+            updateContent(); // Initial content update
+        });
+    </script>
+</body>
+</html>
