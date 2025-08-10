@@ -1,0 +1,666 @@
+ /* IMPORTANT: BPG Nino Mtavruli Font Import
+        You need to place your font files (e.g., bpg-nino-mtavruli.woff2, bpg-nino-mtavruli.woff)
+        in a '/fonts/' directory relative to your HTML file.
+        Adjust the 'url()' paths if your font files are located elsewhere.
+        */
+ @font-face {
+     font-family: 'BPG Nino Mtavruli';
+     src: url('/fonts/bpg-nino-mtavruli.woff2') format('woff2'),
+         url('/fonts/bpg-nino-mtavruli.woff') format('woff');
+     font-weight: normal;
+     font-style: normal;
+ }
+
+ @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+ /* Define color palette and base styles */
+ :root {
+     --color-background: #0D1117;
+     --color-panel: #161B22;
+     --color-gold: #D1B67D;
+     --color-gold-transparent: rgba(209, 182, 125, 0);
+     --color-border: rgba(209, 182, 125, 0.2);
+     --color-text-primary: #E0E0E0;
+     --color-text-secondary: #8B949E;
+ }
+
+ /* Use Poppins font by default for the entire body */
+ body {
+     font-family: 'Poppins', sans-serif;
+     /* Default font for English content */
+     background-color: var(--color-background);
+     color: var(--color-text-primary);
+     overflow-x: hidden;
+     cursor: cell;
+     animation: gradientFlow 20s ease infinite;
+     background-size: 600% 600%;
+ }
+
+ /* Apply BPG Nino Mtavruli ONLY when the body has the 'lang-ka' class (Georgian language active) */
+ body.lang-ka,
+ body.lang-ka .sidebar-header,
+ body.lang-ka .sidebar-link,
+ body.lang-ka .content-nav-links a,
+ body.lang-ka .main-title,
+ body.lang-ka .main-subtitle,
+ body.lang-ka .main-cta-button,
+ body.lang-ka .panel-header h3,
+ body.lang-ka .panel-list-item span,
+ body.lang-ka .ad-placement h4,
+ body.lang-ka .ad-placeholder,
+ body.lang-ka #lang-toggle-button {
+     font-family: "BPG Nino Mtavruli", sans-serif !important;
+     /* Use !important to ensure override */
+ }
+
+ /* The side-main-subtitle uses Roboto Condensed for its dashes, keep that specific font for it */
+ body:not(.lang-ka) .side-main-subtitle,
+ body.lang-ka .side-main-subtitle {
+     font-family: "Roboto Condensed", sans-serif !important;
+     /* Ensure Roboto is kept for this specific element */
+ }
+
+
+ @keyframes gradientFlow {
+     0% {
+         background-position: 0% 50%;
+     }
+
+     50% {
+         background-position: 100% 50%;
+     }
+
+     100% {
+         background-position: 0% 50%;
+     }
+ }
+
+ /* Full-screen container */
+ .main-container {
+     width: 100vw;
+     height: 100vh;
+     display: flex;
+     background-color: var(--color-background);
+ }
+
+ /* Left Sidebar Styling */
+ .left-sidebar {
+     width: 280px;
+     background-color: var(--color-panel);
+     border-right: 1px solid var(--color-border);
+     padding: 1.5rem;
+     display: flex;
+     flex-direction: column;
+     flex-shrink: 0;
+     transition: transform 0.3s ease-in-out;
+ }
+
+ .sidebar-header {
+     font-size: 1.75rem;
+     font-weight: 700;
+     color: var(--color-gold);
+     text-align: center;
+     padding-bottom: 2rem;
+     border-bottom: 1px solid var(--color-border);
+ }
+
+ .sidebar-nav {
+     margin-top: 2rem;
+ }
+
+ .sidebar-link {
+     display: flex;
+     align-items: center;
+     padding: 0.9rem 0.6rem;
+     margin-bottom: 0.5rem;
+     font-size: 1rem;
+     font-weight: 500;
+     color: var(--color-text-secondary);
+     border-radius: 8px;
+     border-left: 4px solid transparent;
+     transition: all 0.2s ease-in-out;
+     text-decoration: none;
+ }
+
+ .sidebar-link i {
+     width: 25px;
+     margin-right: 1rem;
+     font-size: 0.9rem;
+ }
+
+ .sidebar-link:hover {
+     color: var(--color-text-primary);
+     background-color: rgba(255, 255, 255, 0.05);
+ }
+
+ /* --- GRADIENT FOR ACTIVE LINK --- */
+ .sidebar-link.active {
+     color: var(--color-gold);
+     font-weight: 600;
+     background: linear-gradient(90deg, rgba(209, 182, 125, 0.15) 0%, var(--color-gold-transparent) 100%);
+     border-left: 4px solid var(--color-gold);
+ }
+
+ /* Main Content Area */
+ .content-area {
+     flex-grow: 1;
+     display: flex;
+     flex-direction: column;
+     overflow-y: auto;
+     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d1b67d' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+ }
+
+ /* Top Navigation inside Content Area */
+ .content-top-nav {
+     padding: 1rem 2rem;
+     border-bottom: 1px solid var(--color-border);
+     flex-shrink: 0;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+ }
+
+ .content-nav-links a {
+     color: var(--color-text-secondary);
+     font-weight: 600;
+     padding: 0.5rem 1rem;
+     margin: 0 0.5rem;
+     border-bottom: 2px solid transparent;
+     transition: all 0.2s ease;
+ }
+
+ .content-nav-links a.active,
+ .content-nav-links a:hover {
+     color: var(--color-text-primary);
+     border-bottom-color: var(--color-gold);
+ }
+
+ .icon-with-tooltip {
+     position: relative;
+     display: inline-block;
+     cursor: pointer;
+ }
+
+ .content-actions i {
+     font-size: 1.2rem;
+     color: var(--color-text-secondary);
+     margin-left: 1.5rem;
+     cursor: pointer;
+     position: relative;
+ }
+
+ /* Tooltip box */
+ .icon-with-tooltip::after {
+     content: attr(data-tooltip);
+     position: absolute;
+     top: 125%;
+     left: 50%;
+     transform: translateX(-50%);
+     background-color: var(--color-panel);
+     color: var(--color-text-primary);
+     padding: 6px 10px;
+     border-radius: 4px;
+     white-space: nowrap;
+     font-size: 0.75rem;
+     opacity: 0;
+     pointer-events: none;
+     transition: opacity 0.2s ease;
+     border: 1px solid var(--color-border);
+     z-index: 10;
+ }
+
+ /* Tooltip arrow (optional) */
+ .icon-with-tooltip::before {
+     content: '';
+     position: absolute;
+     top: 115%;
+     left: 50%;
+     transform: translateX(-50%);
+     border: 5px solid transparent;
+     border-bottom-color: var(--color-panel);
+     opacity: 0;
+     transition: opacity 0.2s ease;
+     z-index: 10;
+ }
+
+ .icon-with-tooltip:hover::after,
+ .icon-with-tooltip:hover::before {
+     opacity: 1;
+ }
+
+ #lang-toggle-button {
+     background-color: var(--color-gold);
+     color: var(--color-panel);
+     width: 2.5rem;
+     /* Fixed width to avoid shifting */
+     height: 2.5rem;
+     /* Optional: set height for full square */
+     align-items: center;
+     /* Vertical centering */
+     justify-content: center;
+     /* Horizontal centering */
+     padding: 0;
+     /* Remove padding if using width/height */
+     border-radius: 5px;
+     font-size: 0.9rem;
+     font-weight: 600;
+     cursor: pointer;
+     border: none;
+     transition: background-color 0.2s ease, transform 0.2s ease;
+     margin-left: 1.5rem;
+ }
+
+ #lang-toggle-button:hover {
+     background-color: #e6c88f;
+     transform: translateY(-1px);
+ }
+
+ /* Center Content Styling */
+ .center-content {
+     flex-grow: 1;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     text-align: center;
+     padding: 2rem;
+ }
+
+ .main-logo {
+     width: 250px;
+     max-width: 100%;
+     height: auto;
+ }
+
+ .main-title {
+     font-size: 4.5rem;
+     font-weight: 700;
+     color: var(--color-text-primary);
+     letter-spacing: 2px;
+     margin-top: 1.5rem;
+ }
+
+ .main-subtitle {
+     font-size: 1.8rem;
+     color: var(--color-gold);
+     font-weight: 500;
+ }
+
+ .side-main-subtitle {
+     font-size: 1.3rem;
+     /* This element uses a specific font for the dashes, we override it above */
+     font-optical-sizing: auto;
+     font-weight: 400;
+     font-style: normal;
+     color: var(--color-gold);
+     justify-content: center;
+     align-content: center;
+     display: flex;
+     font-weight: 500;
+     text-decoration: underline;
+ }
+
+ .main-cta-button {
+     margin-top: 2.5rem;
+     padding: 1rem 3rem;
+     background-color: var(--color-gold);
+     color: var(--color-panel);
+     font-size: 1.1rem;
+     font-weight: 700;
+     border-radius: 8px;
+     cursor: pointer;
+     transition: transform 0.2s ease, box-shadow 0.2s ease;
+     box-shadow: 0 0 20px rgba(209, 182, 125, 0.3);
+ }
+
+ .main-cta-button:hover {
+     transform: scale(1.05);
+ }
+
+ /* --- RIGHT SIDE PANEL AS A CONTAINER --- */
+ .right-panel {
+     width: 320px;
+     background-color: var(--color-panel);
+     border-left: 1px solid var(--color-border);
+     padding: 1.5rem;
+     flex-shrink: 0;
+ }
+
+ .panel-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-bottom: 1.5rem;
+ }
+
+ .panel-header h3 {
+     font-size: 1.25rem;
+     font-weight: 600;
+     color: var(--color-text-primary);
+ }
+
+ .panel-search {
+     background-color: var(--color-background);
+     border: 1px solid var(--color-border);
+     color: var(--color-text-primary);
+     padding: 0.5rem 1rem;
+     border-radius: 8px;
+ }
+
+ .panel-list-item {
+     background-color: #0D1117;
+     border: 1px solid var(--color-border);
+     border-radius: 8px;
+     padding: 1rem;
+     margin-bottom: 1rem;
+     font-size: 1rem;
+     font-weight: 500;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     cursor: pointer;
+     transition: all 0.2s ease;
+ }
+
+ .panel-list-item:hover {
+     border-color: var(--color-gold);
+     color: var(--color-gold);
+ }
+
+ .panel-button {
+     background-color: #0D1117;
+     border: 1px solid var(--color-border);
+     width: 100%;
+     padding: 1rem;
+     border-radius: 8px;
+     margin-top: 1rem;
+     font-size: 1rem;
+     font-weight: 600;
+     text-align: center;
+ }
+
+ /* New styles for AD placement */
+ .ad-placement {
+     background-color: var(--color-background);
+     border: 1px solid var(--color-gold);
+     border-radius: 8px;
+     padding: 1rem;
+     margin-top: 2rem;
+     text-align: center;
+     box-shadow: 0 0 15px rgba(209, 182, 125, 0.2);
+ }
+
+ .ad-placement h4 {
+     font-size: 1.1rem;
+     font-weight: 700;
+     color: var(--color-gold);
+     margin-bottom: 0.8rem;
+ }
+
+ .ad-placeholder {
+     font-size: 0.9rem;
+     color: var(--color-text-secondary);
+ }
+
+ /* Responsive: Mobile Menu Icon */
+ #menu-toggle {
+     display: none;
+     font-size: 1.5rem;
+     cursor: pointer;
+ }
+
+ /* ========== RESPONSIVE STYLES ========== */
+
+ @media (max-width: 1200px) {
+     .left-sidebar {
+         width: 220px;
+         padding: 1rem;
+     }
+
+     .right-panel {
+         width: 260px;
+         padding: 1rem;
+     }
+
+     .main-title {
+         font-size: 3.5rem;
+     }
+
+     .main-subtitle {
+         font-size: 1.5rem;
+     }
+ }
+
+ @media (max-width: 1024px) {
+     .main-container {
+         flex-direction: column;
+     }
+
+     .left-sidebar,
+     .right-panel {
+         position: fixed;
+         top: 0;
+         left: 0;
+         height: 100vh;
+         width: 240px;
+         background-color: var(--color-panel);
+         transform: translateX(-100%);
+         transition: transform 0.3s ease-in-out;
+         z-index: 1000;
+     }
+
+     .right-panel {
+         right: 0;
+         left: auto;
+         transform: translateX(100%);
+     }
+
+     .left-sidebar.active {
+         transform: translateX(0%);
+     }
+
+     .right-panel.active {
+         transform: translateX(0%);
+     }
+
+     .content-area {
+         padding: 1rem;
+         background-size: 100px;
+     }
+
+     .content-top-nav {
+         flex-direction: column;
+         align-items: flex-start;
+         gap: 1rem;
+     }
+
+     #menu-toggle {
+         display: block;
+         color: var(--color-gold);
+         z-index: 1000;
+
+     }
+ }
+
+ @media (max-width: 768px) {
+     .main-title {
+         font-size: 2.5rem;
+     }
+
+     .main-subtitle {
+         font-size: 1.2rem;
+     }
+
+     .side-main-subtitle {
+         font-size: 1rem;
+     }
+
+     .main-cta-button {
+         width: 100%;
+         padding: 0.9rem;
+         font-size: 1rem;
+     }
+
+     .panel-list-item {
+         font-size: 0.95rem;
+         padding: 0.8rem;
+     }
+
+     .panel-button {
+         padding: 0.8rem;
+         font-size: 0.95rem;
+     }
+
+     .sidebar-link {
+         padding: 0.8rem 1rem;
+         font-size: 0.95rem;
+     }
+ }
+
+ @media (max-width: 480px) {
+     .main-title {
+         font-size: 2rem;
+         letter-spacing: 1px;
+     }
+
+     .main-subtitle {
+         font-size: 1rem;
+     }
+
+     .center-content {
+         padding: 1.5rem 1rem;
+     }
+
+     .content-top-nav {
+         padding: 1rem;
+     }
+
+     .content-nav-links a {
+         font-size: 0.9rem;
+         padding: 0.4rem 0.6rem;
+     }
+
+     .panel-header h3 {
+         font-size: 1.1rem;
+     }
+
+     .panel-search {
+         font-size: 0.9rem;
+     }
+
+     .panel-list-item {
+         font-size: 0.9rem;
+     }
+
+     .sidebar-header {
+         font-size: 1.5rem;
+     }
+ }
+
+ [id="title-text"] {
+     position: relative;
+     display: inline-block;
+     cursor: pointer;
+ }
+
+
+
+ #share-panel {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  
+  transform: translate(-50%, -50%);
+  background-color: var(--color-panel);
+  color: var(--color-text-primary);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  z-index: 9999;
+  width: 500px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+#share-panel .share-text {
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+#share-panel .share-link {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-background);
+  color: var(--color-gold);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+
+
+
+
+.copy-button {
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-gold);
+  color: var(--color-panel);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.copy-button:hover {
+  background-color: #c5a86d; /* Slightly darker gold */
+}
+
+
+
+
+
+ /* დამატებითი tooltip */
+ [id="title-text"]::after {
+     content: attr(data-tooltip);
+     position: absolute;
+     top: 125%;
+     left: 50%;
+     transform: translateX(-50%);
+     background-color: var(--color-panel);
+     color: var(--color-text-primary);
+     padding: 6px 10px;
+     border-radius: 4px;
+     white-space: nowrap;
+     font-size: 0.75rem;
+     opacity: 0;
+     pointer-events: none;
+     transition: opacity 0.2s ease;
+     border: 1px solid var(--color-border);
+     z-index: 10;
+ }
+
+ /* Tooltip arrow */
+ [id="title-text"]::before {
+     content: '';
+     position: absolute;
+     top: 115%;
+     left: 50%;
+     transform: translateX(-50%);
+     border: 5px solid transparent;
+     border-bottom-color: var(--color-panel);
+     opacity: 0;
+     transition: opacity 0.2s ease;
+     z-index: 10;
+ }
+
+ /* Show tooltip on hover */
+ [id="title-text"]:hover::after,
+ [id="title-text"]:hover::before {
+     opacity: 1;
+ }
